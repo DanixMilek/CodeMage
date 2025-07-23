@@ -3308,6 +3308,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 694273503544023956, guid: 3c4b4b4e7a7efe5409f9bb54332c4928,
         type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 694273503544023956, guid: 3c4b4b4e7a7efe5409f9bb54332c4928,
+        type: 3}
       propertyPath: m_LocalPosition.x
       value: 13.85
       objectReference: {fileID: 0}
@@ -3358,6 +3363,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2932169006134032155, guid: 3c4b4b4e7a7efe5409f9bb54332c4928,
         type: 3}
+      propertyPath: vivo
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2932169006134032155, guid: 3c4b4b4e7a7efe5409f9bb54332c4928,
+        type: 3}
+      propertyPath: estado
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2932169006134032155, guid: 3c4b4b4e7a7efe5409f9bb54332c4928,
+        type: 3}
       propertyPath: player
       value: 
       objectReference: {fileID: 386182885309811692}
@@ -3368,9 +3383,29 @@ PrefabInstance:
       objectReference: {fileID: 386182885309811690}
     - target: {fileID: 2932169006134032155, guid: 3c4b4b4e7a7efe5409f9bb54332c4928,
         type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2932169006134032155, guid: 3c4b4b4e7a7efe5409f9bb54332c4928,
+        type: 3}
+      propertyPath: distanciaAtacar
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2932169006134032155, guid: 3c4b4b4e7a7efe5409f9bb54332c4928,
+        type: 3}
+      propertyPath: distanciaSeguir
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2932169006134032155, guid: 3c4b4b4e7a7efe5409f9bb54332c4928,
+        type: 3}
+      propertyPath: distanciaEscapar
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 2932169006134032155, guid: 3c4b4b4e7a7efe5409f9bb54332c4928,
+        type: 3}
       propertyPath: Jugador_Detectado
       value: 
-      objectReference: {fileID: 386182885309811692}
+      objectReference: {fileID: 0}
     - target: {fileID: 6212772030780096421, guid: 3c4b4b4e7a7efe5409f9bb54332c4928,
         type: 3}
       propertyPath: m_Name

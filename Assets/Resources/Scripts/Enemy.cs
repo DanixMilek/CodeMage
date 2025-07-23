@@ -2,6 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using JetBrains.Annotations;
+
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class Enemy : MonoBehaviour
 {
@@ -20,6 +26,134 @@ public class Enemy : MonoBehaviour
 
     private bool isAttacking = false;
 
+    public Estados estado;
+    public float distanciaSeguir;
+    public float distanciaAtacar;
+    public float distanciaEscapar;
+
+    public bool autoseleccionarTarget = true;
+    public float distancia;
+
+    public bool vivo = true;
+
+    private void Awake()
+    {
+        if(autoseleccionarTarget)
+            Jugador_Detectado = GameObject.FindGameObjectWithTag("Player").transform;
+            StartCoroutine(CalcularDistancia());
+    }
+    private void LateUpdate()
+    {
+        CheckEstado();
+    }
+    private void CheckEstado()
+    {
+        switch (estado)
+        {
+            case Estados.idle:
+                EstadoIdle();
+                break;
+
+            case Estados.seguir:
+                EstadoSeguir();
+                break;
+
+            case Estados.atacar:
+                EstadoAtacar();
+                break;
+
+            case Estados.muerto:
+                EstadoMuerto();
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void CambiarEstado(Estados e)
+    {
+        switch (e)
+        {
+            case Estados.idle:
+                break;
+
+            case Estados.seguir:
+                ChasePlayer();
+                break;
+            case Estados.atacar:
+                break;
+            case Estados.muerto:
+                vivo = false;
+                break;
+            default:
+                break;
+        }
+        estado = e;
+    }
+    public virtual void EstadoIdle()
+    {
+        if (distancia < distanciaSeguir)
+        {
+            CambiarEstado(Estados.seguir);
+        }
+    }
+
+    public virtual void EstadoSeguir()
+    {
+        if (distancia < distanciaAtacar)
+        {
+            CambiarEstado(Estados.atacar);
+        }else if (distancia > distanciaEscapar)
+        {
+            CambiarEstado(Estados.idle);
+        }
+    }
+    public virtual void EstadoAtacar()
+    {
+        if (distancia > distanciaAtacar + 0.4f)
+        {
+            CambiarEstado(Estados.seguir);
+        }
+    }
+    public virtual void EstadoMuerto()
+    {
+    }
+
+    IEnumerator CalcularDistancia()
+    {
+        while (vivo)
+        {
+            if (Jugador_Detectado != null)
+            {
+                distancia = Vector3.Distance(transform.position, Jugador_Detectado.position);
+                yield return new WaitForSeconds(0.3f);
+            }
+        }
+    }
+    private void OnDrawGizmosSelected()
+    {
+        Handles.color = Color.red;
+        Handles.DrawWireDisc(transform.position, Vector3.up, distanciaAtacar);
+        Handles.color = Color.yellow;
+        Handles.DrawWireDisc(transform.position, Vector3.up, distanciaSeguir);
+        Handles.color = Color.blue;
+        Handles.DrawWireDisc(transform.position, Vector3.up, distanciaEscapar);
+    }
+
+    private void OnDrawGizmos()
+    {
+        int icono = (int)estado;
+        icono++;
+        Gizmos.DrawIcon(transform.position + Vector3.up * 1f, "0"+icono+".png", false);
+    }
+
+    public enum Estados
+    {
+        idle   = 0,
+        seguir = 1,
+        atacar = 2,
+        muerto = 3
+    }    
     private void Start()
     {
 
@@ -38,11 +172,11 @@ public class Enemy : MonoBehaviour
         {
             AttackPlayer();
         }
-        else
-        {
-            // Si está fuera del rango, persigue al jugador
-            ChasePlayer();
-        }
+        //else
+        //{
+        //    // Si está fuera del rango, persigue al jugador
+        //    ChasePlayer();
+        //}
     }
 
     void ChasePlayer()
