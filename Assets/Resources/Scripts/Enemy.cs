@@ -26,6 +26,12 @@ public class Enemy : MonoBehaviour
 
     private bool isAttacking = false;
 
+    public int rutina;
+    public float cronometro;
+    //public Animator ani; (PENDIENTE ANIMACION)
+    public Quaternion angulo;
+    public float grado;
+
     public Estados estado;
     public float distanciaSeguir;
     public float distanciaAtacar;
@@ -36,7 +42,33 @@ public class Enemy : MonoBehaviour
 
     public bool vivo = true;
 
-    private void Awake()
+    public void comportamiento_enemigo()
+    {
+        cronometro += 1 * Time.deltaTime;
+        if (cronometro >= 4)
+        {
+            rutina = Random.Range(0, 2);
+            cronometro = 0;
+        }
+        switch (rutina)
+        {
+            case 0:
+                //ani.SetBool("walk",false);
+                break;
+            case 1:
+                grado = Random.Range(0, 360);
+                angulo = Quaternion.Euler(0, grado, 0);
+                rutina++;
+                break;
+            case 2:
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, angulo, 0.5f);
+                transform.Translate(Vector3.forward * 1 * Time.deltaTime);
+                //ani.SetBool("walk",true);
+                break;
+        }
+    }
+
+    public void Awake()
     {
         if(autoseleccionarTarget)
             Jugador_Detectado = GameObject.FindGameObjectWithTag("Player").transform;
@@ -166,7 +198,7 @@ public class Enemy : MonoBehaviour
     {
         // Calcular la distancia al jugador
         float distanceToPlayer = Vector3.Distance(transform.position, Jugador_Detectado.position);
-
+        comportamiento_enemigo();
         // Si está dentro del rango de ataque
         if (distanceToPlayer <= attackRange)
         {
@@ -192,7 +224,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    void AttackPlayer()
+    public void AttackPlayer()
     {
         if (!isAttacking)
         {
