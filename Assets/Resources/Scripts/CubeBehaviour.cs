@@ -24,11 +24,26 @@ public class SmoothMouseLook : MonoBehaviour
     float rotAverageY = 0F;
     public float frameCounter = 20;
     Quaternion originalRotation;
+    void Start()
+    {
+        UnityEngine.Cursor.lockState = CursorLockMode.Confined;
+        Rigidbody rb = GetComponent<Rigidbody>();
+        if (rb)
+            rb.freezeRotation = true;
+        originalRotation = transform.localRotation;
+    }
     void Update()
     {
-        var dir = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-        transform.Translate(dir * _speed * Time.deltaTime);
+        // Movimiento relativo a la rotación (pero solo en el eje Y horizontal)
+        float horizontal = Input.GetAxis("Horizontal");
+        float vertical = Input.GetAxis("Vertical");
 
+        // Calcula la dirección relativa a la rotación del jugador
+        Vector3 moveDirection = (transform.forward * vertical + transform.right * horizontal).normalized;
+        moveDirection.y = 0; // Ignora cualquier componente vertical (evita "volar")
+
+        // Mueve al jugador en el espacio global (pero con dirección corregida)
+        transform.Translate(moveDirection * _speed * Time.deltaTime, Space.World);
         if (axes == RotationAxes.MouseXAndY)
         {
             //Resets the average rotation
@@ -114,14 +129,6 @@ public class SmoothMouseLook : MonoBehaviour
             Quaternion yQuaternion = Quaternion.AngleAxis(rotAverageY, Vector3.left);
             transform.localRotation = originalRotation * yQuaternion;
         }
-    }
-    void Start()
-    {
-        UnityEngine.Cursor.lockState = CursorLockMode.Confined;
-        Rigidbody rb = GetComponent<Rigidbody>();
-        if (rb)
-            rb.freezeRotation = true;
-        originalRotation = transform.localRotation;
     }
     public static float ClampAngle(float angle, float min, float max)
     {
